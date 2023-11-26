@@ -1,18 +1,22 @@
 # Setup/imports
-from PIL import ImageGrab  # For capturing the screen
-import numpy as np
 import gymnasium
+from gymnasium import wrappers
+import os
+import numpy as np
 
-env = gymnasium.make("FrozenLake-v1", render_mode="human")  # create the environment used for the game
+wrapped_env = gymnasium.make("FrozenLake-v1", render_mode="rgb_array")  # create the environment used for the game
+env = wrappers.RecordVideo(wrapped_env, 'game_screenshots')  # wrap environment in recorder to view output
+if not os.path.exists('game_screenshots'):  # create directory for storing videos
+    os.makedirs('game_screenshots')
 
 # Define hyperparameters
-number_of_runs = 500  # takes about 3 seconds
+number_of_runs = 10000  # takes about 3 seconds
 learning_rate = 0.1
 discount_factor = 0.99
 initial_exploration = 1.0
 min_exploration = 0.01
 exploration_decay = 0.001
-report_interval = 100
+report_interval = 1000
 report = 'Average: %.2f, 100-run average: %.2f, Best average: %.2f (Run %d)'
 
 # Reset learned values, rewards and best streak
